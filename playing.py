@@ -187,7 +187,8 @@ def train_dp(trainloader, model, optimizer, epoch):
     
     with tqdm(total=len(trainloader), leave=True) as pbar:
         for i, data in enumerate(trainloader, 0):
-            inputs, protected_labels, labels = data
+           # inputs, protected_labels, labels = data
+            inputs, labels = data
 
             inputs = inputs.to(device)
             labels = labels.to(device)
@@ -339,7 +340,7 @@ if __name__ == '__main__':
     reseed(5)
     if helper.params['dataset'] == 'inat':
         helper.load_inat_data()
-        helper.balance_loaders()
+        #helper.balance_loaders() todo reactivate
     elif helper.params['dataset'] == 'word':
         helper.load_data()
     elif helper.params['dataset'] == 'dif':
