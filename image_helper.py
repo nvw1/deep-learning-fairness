@@ -223,9 +223,9 @@ class ImageHelper(Helper):
         transform_test = transforms.Compose([self.center_crop, transforms.ToTensor(), normalize])
 
         self.train_dataset = torchvision.datasets.ImageFolder(
-            '/Users/nvw3/Downloads/data/inaturalist-2019-fgvc6/train_val2019', transform=transform_train)
+            'C:/Users/nvwen/Documents/inaturalist-2019-fgvc6/train_val2019', transform=transform_train)
         logger.info('len train before : ', len(self.train_dataset))
-        #Uncommented the following not sure what it does todo
+        #Uncommented :the following not sure what it does todo
         if self.params['ds_size']:
             indices = list(range(0, len(self.train_dataset)))
             random.shuffle(indices)
@@ -235,10 +235,10 @@ class ImageHelper(Helper):
         
         #edited
         self.test_dataset = torchvision.datasets.ImageFolder(
-            '/Users/nvw3/Downloads/data/inaturalist-2019-fgvc6/', transform=transform_test)
+            'C:/Users/nvwen/Documents/inaturalist-2019-fgvc6/test2019', transform=transform_test)
         logger.info('len test: ', len(self.test_dataset))
-        #edited
-        self.labels = list(range(len(os.listdir('/Users/nvw3/Downloads/data/inaturalist-2019-fgvc6/'))))
+        #edited important to be above folder to recognize labels
+        self.labels = list(range(len(os.listdir('C:/Users/nvwen/Documents/inaturalist-2019-fgvc6/'))))
         logger.info(self.labels)
         self.test_loader = torch.utils.data.DataLoader(self.test_dataset, batch_size=8, shuffle=True, num_workers=2)
         self.train_loader = torch.utils.data.DataLoader(self.train_dataset, batch_size=self.params['batch_size'],

@@ -8,7 +8,7 @@ decay: 5e-4
 S: 5
 z: 0.5
 mu: 0.9
-dp: False
+dp: True #False
 epochs: 60
 save_on_epochs: [10, 20, 40, 60]
 optimizer: Adam
@@ -18,7 +18,7 @@ save_model: True
 dataset: celeba
 model: resnet
 
-image_dir: data/celeba/img_align_celeba/img_align_celeba
+image_dir: data/celeba/img_align_celeba
 attr_path: data/celeba/imbalanced_attr/18k_female.csv
 selected_attr: Smiling
 protected_attr: Male

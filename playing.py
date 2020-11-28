@@ -34,9 +34,14 @@ from models.resnet import Res, PretrainedRes
 from utils.utils import dict_html, create_table, plot_confusion_matrix
 from inception import *
 
+
+from multiprocessing import freeze_support
+
+freeze_support()
+
 # Add wandb logging which is synced with the Tensorboard
 import wandb 
-wandb.init(sync_tensorboard=True)
+#wandb.init(sync_tensorboard=True)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
@@ -54,10 +59,12 @@ layout = {'cosine': {
 
 
 def plot(x, y, name):
+    freeze_support()
     writer.add_scalar(tag=name, scalar_value=y, global_step=x)
 
 
 def compute_norm(model, norm_type=2):
+    freeze_support()
     total_norm = 0
     for p in model.parameters():
         param_norm = p.grad.data.norm(norm_type)
@@ -68,6 +75,7 @@ def compute_norm(model, norm_type=2):
 
 
 def test(net, epoch, testloader, vis=True):
+    freeze_support()
     net.eval()
     correct = 0
     total = 0
@@ -179,6 +187,7 @@ def test(net, epoch, testloader, vis=True):
 
 
 def train_dp(trainloader, model, optimizer, epoch):
+    freeze_support()
     norm_type = 2
     model.train()
     running_loss = 0.0
@@ -187,8 +196,9 @@ def train_dp(trainloader, model, optimizer, epoch):
     
     with tqdm(total=len(trainloader), leave=True) as pbar:
         for i, data in enumerate(trainloader, 0):
-           # inputs, protected_labels, labels = data
-            inputs, labels = data
+            inputs, protected_labels, labels = data
+            #inputs, labels = data
+            #protected_labels = labels
 
             inputs = inputs.to(device)
             labels = labels.to(device)
@@ -263,14 +273,15 @@ def train_dp(trainloader, model, optimizer, epoch):
             
     print(ssum)
     for pos, norms in sorted(label_norms.items(), key=lambda x: x[0]):
-        logger.info(f"{pos}: {np.mean(norms)}")
+        logger.info(f"{pos}: {torch.mean(torch.stack(norms))}")
         if helper.params['dataset'] == 'dif':
-            plot(epoch, np.mean(norms), f'dif_norms_class/{pos}')
+            plot(epoch, torch.mean(torch.stack(norms)), f'dif_norms_class/{pos}')
         else:
-            plot(epoch, np.mean(norms), f'norms/class_{pos}')
+            plot(epoch, torch.mean(torch.stack(norms)), f'norms/class_{pos}')
 
 
 def train(trainloader, model, optimizer, epoch):
+    freeze_support()
     model.train()
     running_loss = 0.0
     with tqdm(total=len(trainloader), leave=True) as pbar:
@@ -299,14 +310,16 @@ def train(trainloader, model, optimizer, epoch):
 
 
 if __name__ == '__main__':
+    freeze_support()
     parser = argparse.ArgumentParser(description='PPDL')
-    parser.add_argument('--params', dest='params', default='utils/params.yaml')
+    parser.add_argument('--params', dest='params', default='utils/params_celeba.yaml')
     parser.add_argument('--name', dest='name', required=True)
 
     args = parser.parse_args()
     d = datetime.now().strftime('%b.%d_%H.%M.%S')
     writer = SummaryWriter(log_dir=f'runs/{args.name}')
     writer.add_custom_scalars(layout)
+    
 
     with open(args.params) as f:
         params = yaml.load(f)
