@@ -1,15 +1,15 @@
-name: smiling_celeba_non_dp_18k_female
-test_batch_size: 128
-batch_size: 256
-num_microbatches: 256
+name: smiling_celeba_non_dp_27k_female #change this in accordance with the attributes lower down
+test_batch_size: 128 #128
+batch_size: 256 #256
+num_microbatches: 256 #256
 lr: 0.00005
 momentum: 0.9
 decay: 5e-4
 S: 5
 z: 0.5
 mu: 0.9
-dp: True #False
-epochs: 60
+dp: False #False
+epochs: 2
 save_on_epochs: [10, 20, 40, 60]
 optimizer: Adam
 scheduler: False
@@ -18,8 +18,8 @@ save_model: True
 dataset: celeba
 model: resnet
 
-image_dir: data/celeba/img_align_celeba
-attr_path: data/celeba/imbalanced_attr/18k_female.csv
+image_dir: /Users/nvw3/Downloads/celeba/img_align_celeba/img_align_celeba/ #Changed for local env on MacBook soemtimes need double folder structure as comes out of the zip
+attr_path: /Users/nvw3/Downloads/celeba/imbalanced_attr/27k_female.csv #Changed for local env on MacBook
 selected_attr: Smiling
 protected_attr: Male
 labels: [0, 1]
