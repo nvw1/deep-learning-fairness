@@ -9,7 +9,7 @@ S: 5
 z: 0.5
 mu: 0.9
 dp: False #False
-epochs: 2
+epochs: 10
 save_on_epochs: [10, 20, 40, 60]
 optimizer: Adam
 scheduler: False
